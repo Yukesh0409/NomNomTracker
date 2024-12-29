@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Daily Logs</title>
+    <link rel="stylesheet" href="static/css/view_logs.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>Your Daily Logs</h1>
+
+    <form method="POST">
+        <div class="form-group">
+            <label for="filter_date_from">Filter from:</label>
+            <input type="date" name="filter_date_from" id="filter_date_from" class="form-control">
+        </div>
+        
+        <div class="form-group">
+            <label for="filter_date_to">Filter to:</label>
+            <input type="date" name="filter_date_to" id="filter_date_to" class="form-control">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Apply Filter</button>
+    </form>
+
+    {% for date, data in grouped_logs.items() %}
+        <h2>{{ date }}</h2>
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Food Item</th>
+                    <th>Calories</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data['food_items'] %}
+                    <tr>
+                        <td>{{ item.food_item }}</td>
+                        <td>{{ item.calories }} kcal</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="total-calories">Total Calories: {{ data['total_calories'] }}</p>
+    {% endfor %}
+    <form method="POST" action="{{ url_for('export_logs') }}">
+        <button type="submit" class="btn btn-success">Export Logs as CSV</button>
+    </form>
+    
+    <footer>
+        <p>© NomNom Tracker. All rights reserved.</p>
+    </footer>
+</body>
+</html>

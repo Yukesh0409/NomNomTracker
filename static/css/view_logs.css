@@ -1,0 +1,79 @@
+/* Reset some basic styles */
+body, h1, h2, p, ul, li {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #00bcd4;
+}
+
+ul {
+    list-style-type: none;
+}
+
+button {
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #008c9e;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    color: #90caf9;
+}
+
+input[type="date"] {
+    background-color: #1e1e1e;
+    color: white;
+    border: 1px solid #333;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+h2 {
+    margin-top: 20px;
+}
+
+.total-calories {
+    font-size: 18px;
+    color: #e91e63;
+}
+
+.food-item-list {
+    margin-bottom: 20px;
+}
+
+ul {
+    padding-left: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+}

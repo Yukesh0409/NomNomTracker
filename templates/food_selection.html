@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/food_selection.css') }}">
+    <script>
+        async function searchFood() {
+            const searchTerm = document.getElementById("search").value;
+            const response = await fetch("/search_food", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ search_term: searchTerm })
+            });
+            const data = await response.json();
+            const resultsContainer = document.getElementById("search-results");
+            resultsContainer.innerHTML = "";
+            data.forEach(item => {
+                const option = document.createElement("div");
+                option.textContent = item.food;
+                option.onclick = () => {
+                    document.getElementById("food").value = item.food;
+                    resultsContainer.innerHTML = "";
+                };
+                resultsContainer.appendChild(option);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Select the Food You Ate</h1>
+    <form method="POST">
+        <div>
+            <label for="search">Search for Food:</label>
+            <input type="text" id="search" onkeyup="searchFood()">
+            <div id="search-results" style="border: 1px solid #333; background: #222; max-height: 150px; overflow-y: auto;"></div>
+        </div>
+        <div>
+            <label for="food">Select Food:</label>
+            <select id="food" name="food">
+                {% for food_item in food_items %}
+                    <option value="{{ food_item }}">{{ food_item }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity">
+        </div>
+        <div>
+            <label for="custom_food">Enter Food (AI will detect):</label>
+            <textarea id="custom_food" name="custom_food" rows="3"></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

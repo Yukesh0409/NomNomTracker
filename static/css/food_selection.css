@@ -1,0 +1,68 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1e1e2f, #121212);
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    color: #00e676;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+form {
+    background: rgba(30, 30, 50, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
+    width: 90%;
+    max-width: 500px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: #222;
+    color: #fff;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #00e676;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #121212;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #00c853;
+}
+
+#search-results div {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#search-results div:hover {
+    background: #333;
+}
