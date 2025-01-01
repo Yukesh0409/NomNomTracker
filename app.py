@@ -83,12 +83,15 @@ def food_selection():
         quantity = request.form["quantity"]
         custom_food = request.form.get("custom_food")
         food_details = food_collection.find_one({"Food Item": selected_food}, {"_id": 0, "Calories": 1})
+
         if custom_food:
             calorie_info = groq_call.get_calorie_info(custom_food)
             selected_food = custom_food
             quantity = calorie_info['quantity']
-            print(calorie_info['calorie'])
-        calories = calorie_info['calorie']
+            calories = calorie_info['calorie']
+        else:
+            calories = food_details.get("Calories", 0) * int(quantity)
+
         log_entry = {
             "username": session["username"],
             "food_item": selected_food,
@@ -98,13 +101,12 @@ def food_selection():
         }
         logs_collection.insert_one(log_entry)
 
-        print(f"Logged: {log_entry}")
-        return jsonify({"message": "Food selection submitted!"})
+        flash(f"Food '{selected_food}' has been logged successfully!", "success")
+        return redirect(url_for("food_selection"))
 
     all_food_items = list(food_collection.find({}, {"_id": 0, "Food Item": 1}))
     food_item_list = [item["Food Item"] for item in all_food_items if "Food Item" in item]
     return render_template("food_selection.html", food_items=food_item_list)
-
 
 @app.route("/search_food", methods=["POST"])
 def search_food():

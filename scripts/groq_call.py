@@ -1,4 +1,5 @@
 from langchain_groq import ChatGroq
+from langchain.llms import HuggingFaceHub
 from langchain.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
 import json
@@ -6,33 +7,44 @@ import os
 
 load_dotenv()
 
-def get_calorie_info(food_item):
+HUGGING_FACE_API_KEY = os.getenv("HUGGING_FACE_API_KEY")
 
-    chat = ChatGroq(
-        model="llama-3.1-70b-versatile",
-        temperature=0,
-        max_retries=5,
+def get_calorie_info(food_item):
+    chat = HuggingFaceHub(
+        repo_id="mistralai/Mistral-Nemo-Instruct-2407",
+        model_kwargs={"temperature": 0.7, "max_length": 512},
+        huggingfacehub_api_token=HUGGING_FACE_API_KEY
     )
 
-    prompt_template ="""
-        You are a helpful assistant that provides nutritional information. Given a food item, respond with a JSON string containing the following keys:
+    prompt_template = """
+        You are a helpful assistant that provides nutritional information. Your given foods are mainly south indian. Given a food item, respond with a JSON string containing the following keys:
         - "calorie" (integer value in kcal)
         - "quantity" (integer value representing the quantity, assume 1 if unspecified).
 
         Food item: {food_item}
-        """
+    """
     formatted_prompt = ChatPromptTemplate.from_template(prompt_template)
-    response = chat.predict(formatted_prompt.format(food_item=food_item))
-    result = response.strip()
-    start_idx = result.find("{")
-    end_idx = result.rfind("}") + 1
-    if start_idx != -1 and end_idx != -1:
-        result = result[start_idx:end_idx]
-    else:
-        result = "{}"
+    
+    try:
+        # Use `predict` method to get response
+        response = chat.predict(formatted_prompt.format(food_item=food_item))
 
-    result = json.loads(result)
-    print(result)
-    print("Food Item:" ,food_item)
-    print("Calorie: ",result['calorie'])
-    return result
+        # Parse response into JSON
+        start_idx = response.find("{")
+        end_idx = response.rfind("}") + 1
+        if start_idx != -1 and end_idx != -1:
+            result = response[start_idx:end_idx]
+        else:
+            result = "{}"
+        
+        result = json.loads(result)
+        print(f"Response: {result}")
+        return result
+
+    except json.JSONDecodeError:
+        print(f"Failed to parse response: {response}")
+        return {"calorie": 0, "quantity": 1}  # Default values in case of error
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return {"calorie": 0, "quantity": 1}  # Default values in case of error
